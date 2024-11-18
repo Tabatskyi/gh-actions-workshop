@@ -14,7 +14,9 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Save Docker image
-      run: docker save -o rocketdex-image.tar ghcr.io/tabatskyi/gh-actions-workshop:fb0533f
+      run: |
+        docker pull ghcr.io/tabatskyi/gh-actions-workshop:fb0533f || docker build -t ghcr.io/tabatskyi/gh-actions-workshop:fb0533f
+        docker save -o rocketdex-image.tar ghcr.io/tabatskyi/gh-actions-workshop:fb0533f
 
     - name: Copy Docker image to EC2
       run: scp -i ${{ secrets.EC2_SSH_KEY }} rocketdex-image.tar ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/

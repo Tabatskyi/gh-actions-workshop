@@ -25,13 +25,13 @@ jobs:
 
     - name: Copy Docker image to EC2
       run: |
-          echo "$EC2_SSH_KEY" > ~/key.pem
-          chmod 600 ~/key.pem
-          scp -o StrictHostKeyChecking=no -i ~/key.pem rocketdex-image.tar ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
+        echo "$EC2_SSH_KEY" > ~/key.pem
+        chmod 600 ~/key.pem
+        scp -o StrictHostKeyChecking=no -i ~/key.pem rocketdex-image.tar ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
 
     - name: Load image to EC2
       run: |
-          ssh -o StrictHostKeyChecking=no -i ~/key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i ~/key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           kubectl apply -f /home/ubuntu/rocketdex-deployment.yml
           kubectl apply -f /home/ubuntu/rocketdex-service.yml
@@ -39,8 +39,7 @@ jobs:
 
 
     - name: Copy manifests to EC2
-      run: |
-        scp -o StrictHostKeyChecking=no -i ~/key.pem k8s/*.yml ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
+      run: scp -o StrictHostKeyChecking=no -i ~/key.pem k8s/*.yml ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
 
     - name: Apply Kubernetes manifests
       run: |

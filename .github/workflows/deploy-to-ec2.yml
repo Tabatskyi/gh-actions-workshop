@@ -32,9 +32,9 @@ jobs:
     - name: Load image to EC2
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
-          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          kubectl apply -f /home/ubuntu/rocketdex-deployment.yml
-          kubectl apply -f /home/ubuntu/rocketdex-service.yml
+          sudo export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+          sudo kubectl apply -f /home/ubuntu/rocketdex-deployment.yml
+          sudo kubectl apply -f /home/ubuntu/rocketdex-service.yml
         EOF
 
 

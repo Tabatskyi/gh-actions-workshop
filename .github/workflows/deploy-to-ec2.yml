@@ -32,11 +32,12 @@ jobs:
     - name: Load image to EC2
       run: |
         scp -o StrictHostKeyChecking=no -i ~/key.pem rocketdex-image.tar ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
-        ssh -o StrictHostKeyChecking=no -i ~/key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
+        ssh -T -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=10 -i ~/key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
           sudo ctr --namespace k8s.io images import /home/ubuntu/rocketdex-image.tar
           sudo ctr --namespace k8s.io images list | grep rocketdex
           echo "Docker image loaded into k3s container runtime"
         EOF
+
 
     - name: Copy manifests to EC2
       run: scp -o StrictHostKeyChecking=no -i ~/key.pem k8s/*.yml ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/

@@ -23,7 +23,7 @@ jobs:
 
     - name: Load image into Minikube
       run: |
-        ssh -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+        ssh -i "C:\Users\Vasenka\Downloads\key2.pem" ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
           minikube ssh "docker load < /home/docker/rocketdex-image.tar"
           echo "docker image loaded"
         EOF

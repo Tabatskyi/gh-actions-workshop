@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+env:
+  EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,11 +25,14 @@ jobs:
     - name: Copy Docker image to EC2
       run: scp -i ${{ secrets.EC2_SSH_KEY }} rocketdex-image.tar ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/
 
-    - name: Load image into Minikube
-      run: ssh -i "C:\Users\Vasenka\Downloads\key2.pem" ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-           minikube ssh "docker load < /home/docker/rocketdex-image.tar"
-           echo "docker image loaded"
-           EOF
+    - name: Load image to EC2
+      run: |
+          scp -i "C:\Users\Vasenka\Downloads\key2.pem" rocketdex-image.tar ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
+          ssh -i "C:\Users\Vasenka\Downloads\key2.pem" ubuntu@$EC2_PUBLIC_IP << 'EOF'
+            minikube ssh "docker load < /home/ubuntu/rocketdex-image.tar"
+            echo "docker image loaded"
+          EOF
+
 
     - name: Copy manifests to EC2
       run: scp -i ${{ secrets.EC2_SSH_KEY }} k8s/*.yml ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/

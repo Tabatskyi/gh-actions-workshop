@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: 22.x
           cache: 'npm'
+      - name: 'Report Coverage'
+        uses:  davelosert/vitest-coverage-report-action@v2
+        if: always()
       - run: npm ci
       - run: npm run build
       - run: npm run test

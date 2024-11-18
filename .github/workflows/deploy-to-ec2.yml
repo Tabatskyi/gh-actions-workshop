@@ -31,12 +31,12 @@ jobs:
 
     - name: Load image to EC2
       run: |
+        scp -o StrictHostKeyChecking=no -i ~/key.pem rocketdex-image.tar ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
         ssh -o StrictHostKeyChecking=no -i ~/key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
-          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          sudo kubectl apply -f /home/ubuntu/rocketdex-deployment.yml
-          sudo kubectl apply -f /home/ubuntu/rocketdex-service.yml
+          sudo ctr --namespace k8s.io images import /home/ubuntu/rocketdex-image.tar
+          sudo ctr --namespace k8s.io images list | grep rocketdex
+          echo "Docker image loaded into k3s container runtime"
         EOF
-
 
     - name: Copy manifests to EC2
       run: scp -o StrictHostKeyChecking=no -i ~/key.pem k8s/*.yml ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
@@ -44,6 +44,7 @@ jobs:
     - name: Apply Kubernetes manifests
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
+          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           sudo kubectl apply -f /home/ubuntu/rocketdex-deployment.yml
           sudo kubectl apply -f /home/ubuntu/rocketdex-service.yml
         EOF

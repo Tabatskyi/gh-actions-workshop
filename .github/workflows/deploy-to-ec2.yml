@@ -45,6 +45,6 @@ jobs:
     - name: Apply Kubernetes manifests
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
-          kubectl apply -f /home/ubuntu/rocketdex-deployment.yml
-          kubectl apply -f /home/ubuntu/rocketdex-service.yml
+          sudo kubectl apply -f /home/ubuntu/rocketdex-deployment.yml
+          sudo kubectl apply -f /home/ubuntu/rocketdex-service.yml
         EOF

@@ -27,7 +27,7 @@ jobs:
       run: |
           echo "$EC2_SSH_KEY" > ~/key.pem
           chmod 600 ~/key.pem
-          scp -i $EC2_SSH_KEY rocketdex-image.tar ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
+          scp -i key.pem rocketdex-image.tar ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
 
     - name: Load image to EC2
       run: |
@@ -39,11 +39,12 @@ jobs:
 
 
     - name: Copy manifests to EC2
-      run: scp -i $EC2_SSH_KEY k8s/*.yml ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
+      run: |
+        scp -i key.pem k8s/*.yml ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
 
     - name: Apply Kubernetes manifests
       run: |
-        ssh -i $EC2_SSH_KEY ubuntu@$EC2_PUBLIC_IP << 'EOF'
+        ssh -i key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
           kubectl apply -f /home/ubuntu/rocketdex-deployment.yml
           kubectl apply -f /home/ubuntu/rocketdex-service.yml
         EOF

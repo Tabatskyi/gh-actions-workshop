@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: rocketdex
-        image: ghcr.io/tabatskyi/gh-actions-workshop:latest
+        image: ghcr.io/tabatskyi/gh-actions-workshop:fb0533f
         ports:
         - containerPort: 3000
         env:
